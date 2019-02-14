@@ -40,15 +40,19 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 		self._logger.info("usbfileman on_api_get triggered.  Request: "+str(request))
 		resultMessage = ""
 		newFiles = False
-		for folderToCheck in self._settings.get(["watchFolders"])
+		dest = self._settings.get(["copyFolder"])
+
+		for folderToCheck in self._settings.get(["watchFolders"]):
 			src = folderToCheck
-			dest = self._settings.get(["copyFolder"])
+			if not os.path.exists(folderToCheck):
+				resultMessage += (" --- USB mount path does not exist: "+folderToCheck)
+				continue
 			try:
 				usbFiles = os.listdir(src)
 				# self._logger.info(str(usbFiles))
 			except Exception as e:
 				self._logger.info("Could not list files in watchFolder; exception: "+str(e))
-				result += (" --- Could not list files in watchFolder; exception: "+str(e))
+				resultMessage += (" --- Could not list files in watchFolder; exception: "+str(e))
 				continue
 				# return flask.jsonify(result="Could not list files in watchFolder; exception: "+str(e))
 
