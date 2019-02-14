@@ -38,61 +38,72 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 
 	def on_api_get(self, request):
 		self._logger.info("usbfileman on_api_get triggered.  Request: "+str(request))
-		src = self._settings.get(["watchFolder"])
-		dest = self._settings.get(["copyFolder"])
 		resultMessage = ""
-		try:
-			usbFiles = os.listdir(src)
-			# self._logger.info(str(usbFiles))
-		except Exception as e:
-			self._logger.info("Could not list files in watchFolder; exception: "+str(e))
-			return flask.jsonify(result="Could not list files in watchFolder; exception: "+str(e))
+		newFiles = False
+		for folderToCheck in self._settings.get(["watchFolders"])
+			src = folderToCheck
+			dest = self._settings.get(["copyFolder"])
+			try:
+				usbFiles = os.listdir(src)
+				# self._logger.info(str(usbFiles))
+			except Exception as e:
+				self._logger.info("Could not list files in watchFolder; exception: "+str(e))
+				result += (" --- Could not list files in watchFolder; exception: "+str(e))
+				continue
+				# return flask.jsonify(result="Could not list files in watchFolder; exception: "+str(e))
 
-		try:
-			for file_name in usbFiles:
-				# self._logger.info(str(file_name))
-				file_root, file_extension = os.path.splitext(file_name)
-				if (str(file_root).startswith("COPIED")):
-					self._logger.info("File already copied according to name: "+str(file_name))
-					continue
-				if (file_extension in self._settings.get(["copyFileTypes"])):
-					full_src_name = os.path.join(src, file_name)
-					full_dest_name = os.path.join(dest, file_name)
-					if not (os.path.isfile(full_dest_name)):
-						shutil.copy(full_src_name, dest)
-						self._logger.info("Copied "+file_name+" to uploads/USB folder.")
-						resultMessage += ("Copied "+file_name+" to uploads/USB folder."+"---")
-						if (self._settings.get(["fileAction"]) == "rename"):
-							copiedName = os.path.join(src, ("COPIED" + file_name))
-							os.rename(full_src_name, copiedName)
-							resultMessage += (" --- Renamed original file in watchFolder to: "+copiedName)
-					else:
-						if ((hashlib.md5(open(full_src_name).read()).hexdigest()) != (hashlib.md5(open(full_dest_name).read()).hexdigest())):
-							# newDestName = dest + '/' + os.path.splitextfile_name + '-' + str(datetime.datetime.now().strftime('%y-%m-%d_%H-%M'))
-							newDestName = os.path.join(dest, (file_root + "-" + str(datetime.datetime.now().strftime('%y-%m-%d_%H-%M')) + file_extension) )
-							shutil.copyfile(full_src_name, newDestName)
-							self._logger.info("Copied a new version of "+file_name+" to uploads/USB folder as " + newDestName)
-							resultMessage += (" --- Copied a new version of "+file_name+" to uploads/USB folder as " + newDestName)
+			try:
+				for file_name in usbFiles:
+					# self._logger.info(str(file_name))
+					file_root, file_extension = os.path.splitext(file_name)
+					if (str(file_root).startswith("COPIED")):
+						self._logger.info("File already copied according to name: "+str(file_name))
+						continue
+					if (str(file_root).startswith("._")):
+						self._logger.info("File seems to be a Mac system file; skipping.  Filename : "+str(file_name))
+						continue
+					if (file_extension in self._settings.get(["copyFileTypes"])):
+						full_src_name = os.path.join(src, file_name)
+						full_dest_name = os.path.join(dest, file_name)
+						if not (os.path.isfile(full_dest_name)):
+							shutil.copy(full_src_name, dest)
+							self._logger.info("Copied "+file_name+" to uploads/USB folder.")
+							resultMessage += (" --- Copied "+file_name+" to uploads/USB folder.")
+							newFiles = True
 							if (self._settings.get(["fileAction"]) == "rename"):
 								copiedName = os.path.join(src, ("COPIED" + file_name))
 								os.rename(full_src_name, copiedName)
 								resultMessage += (" --- Renamed original file in watchFolder to: "+copiedName)
-		except Exception as e:
-			self._logger.info("Could not copy files to uploads/USB folder; exception: "+str(e))
-			return flask.jsonify(result="Could not copy files to uploads/USB folder; exception: "+str(e)+" .  Results before exception: "+resultMessage)
+						else:
+							if ((hashlib.md5(open(full_src_name).read()).hexdigest()) != (hashlib.md5(open(full_dest_name).read()).hexdigest())):
+								# newDestName = dest + '/' + os.path.splitextfile_name + '-' + str(datetime.datetime.now().strftime('%y-%m-%d_%H-%M'))
+								newDestName = os.path.join(dest, (file_root + "-" + str(datetime.datetime.now().strftime('%y-%m-%d_%H-%M')) + file_extension) )
+								shutil.copyfile(full_src_name, newDestName)
+								self._logger.info("Copied a new version of "+file_name+" to uploads/USB folder as " + newDestName)
+								resultMessage += (" --- Copied a new version of "+file_name+" to uploads/USB folder as " + newDestName)
+								newFiles = True
+								if (self._settings.get(["fileAction"]) == "rename"):
+									copiedName = os.path.join(src, ("COPIED" + file_name))
+									os.rename(full_src_name, copiedName)
+									resultMessage += (" --- Renamed original file in watchFolder to: "+copiedName)
+			except Exception as e:
+				self._logger.info("Could not copy files to uploads/USB folder; exception: "+str(e))
+				resultMessage += (" --- Could not copy files to uploads/USB folder; exception: "+str(e))
+				continue
+				# return flask.jsonify(result="Could not copy files to uploads/USB folder; exception: "+str(e)+" .  Results before exception: "+resultMessage)
 
 		if (resultMessage == ""):
 			resultMessage = "Nothing to do."
-		else:
+		if (newFiles):
 			self._event_bus.fire(Events.UPDATED_FILES, dict(type="printables"))
 		return flask.jsonify(result="Finished without error.  Results: "+resultMessage)
 
 
 	def get_settings_defaults(self):
-		return dict(watchFolder = "/media/usb1/toprint",
+		return dict(watchFolders = ["/media/usb1/toprint", "/media/usb2/toprint", "/media/usb3/toprint", "/media/usb4/toprint"],
 			copyFolder = "/home/pi/.octoprint/uploads/USB",
 			fileAction = "rename",
-			copyFileTypes = [".gcode",".gco",".g"],
+			copyFileTypes = [".gcode", ".gco", ".g", ".stl"],
 			userFeedback = "log"
 		)
 
