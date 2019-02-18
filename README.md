@@ -9,7 +9,7 @@ Initial version responds to an API get by looking at the folder "/media/usb1/top
 Install via the bundled [Plugin Manager](https://github.com/foosel/OctoPrint/wiki/Plugin:-Plugin-Manager)
 or manually using this URL:
 
-    https://github.com/joshwills/OctoPrint-usbFileMan/archive/master.zip
+    https://github.com/MakerGear/OctoPrint-usbFileMan/archive/master.zip
 
 The computer running OctoPrint needs to be configured to automatically mount USB flashdrives to /media/usb1 (right now).  All testing, and the only currently targeted system, is a Raspberry Pi 3B/3B+ running OctoPi 0.15.1 .
 
