@@ -140,7 +140,7 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 				current=self._plugin_version,
 
 				# update method: pip
-				pip="https://github.com/joshwills/OctoPrint-usbFileMan/archive/{target_version}.zip"
+				pip="https://github.com/MakerGear/OctoPrint-usbFileMan/archive/{target_version}.zip"
 			)
 		)
 
