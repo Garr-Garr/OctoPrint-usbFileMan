@@ -135,7 +135,7 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 
 				# version check: github repository
 				type="github_release",
-				user="joshwills",
+				user="MakerGear",
 				repo="OctoPrint-usbFileMan",
 				current=self._plugin_version,
 
