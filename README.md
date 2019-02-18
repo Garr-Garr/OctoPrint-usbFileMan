@@ -13,11 +13,19 @@ or manually using this URL:
 
 The computer running OctoPrint needs to be configured to automatically mount USB flashdrives to /media/usb1 (right now).  All testing, and the only currently targeted system, is a Raspberry Pi 3B/3B+ running OctoPi 0.15.1 .
 
-Current best instructions for this process are here: https://raspberrypi.stackexchange.com/a/66324 .  One addition is to the /usr/local/bin/cpmount file - it needs to also trigger the OctoPrint-usbFileMan api.  Current best option for this is to add to line 23, as second to last line of the file, before "fi":
+Current best instructions for this process are here: https://raspberrypi.stackexchange.com/a/66324 .  The /usr/local/bin/cpmount file needs two changes - it needs to also trigger the OctoPrint-usbFileMan api, and to be executable (per GeertVc's comment on that post).  Current best option for triggering is to add to line 23, as second to last line of the file, before "fi":
 
-sudo -u pi /home/pi/oprint/bin/octoprint client get '/api/plugin/usbfileman'
+`sudo -u pi /home/pi/oprint/bin/octoprint client get '/api/plugin/usbfileman'`
 
-That will trigger OctoPrint's cli client functionality to perform the API get against usbFileMan.
+That will trigger OctoPrint's cli client functionality to perform the API get against usbFileMan.  If you anticipate connecting multiple flashdrives, add that line to each "else" statement, below the call to /usr/bin/pmount .
+
+To make that file executable:
+
+`sudo chmod u+x /usr/local/bin/cpmount`
+
+ntfs-3g may need to be installed to support NTFS formatted drives:
+
+`sudo apt-get install ntfs-3g`
 
 ## Configuration
 
