@@ -178,9 +178,9 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 			try:
 				# caller.checked_call(["some", "command", "with", "parameters"])
 				# caller.checked_call(["sudo apt-get install pmount"])
-				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick.rules")), "/etc/udev/rules.d/"])
-				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick-handler@.service")), "/lib/systemd/system/"])
-				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","cpmount")), "/usr/local/bin/cpmount"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick-handler@.service")), "/lib/systemd/system/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","cpmount")), "/usr/local/bin/cpmount"])
 				caller.checked_call(["sudo", "chmod", "u+x", "/usr/local/bin/cpmount"])
 			except CommandlineError as err:
 				self._logger.info(u"Command returned {}".format(err.returncode))
@@ -194,10 +194,10 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 		elif action["action"] == 'offlineInstall':
 			try:
 				# caller.checked_call(["some", "command", "with", "parameters"])
-				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"installation/pmount_0.9.23-3_armhf.deb"))])
-				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick.rules")), "/etc/udev/rules.d/"])
-				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick-handler@.service")), "/lib/systemd/system/"])
-				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","cpmount")), "/usr/local/bin/cpmount"])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","pmount_0.9.23-3_armhf.deb"))])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick-handler@.service")), "/lib/systemd/system/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","cpmount")), "/usr/local/bin/cpmount"])
 				caller.checked_call(["sudo", "chmod", "u+x", "/usr/local/bin/cpmount"])
 			except CommandlineError as err:
 				self._logger.info(u"Command returned {}".format(err.returncode))
