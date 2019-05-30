@@ -18,6 +18,7 @@ import flask
 import datetime
 import time
 from octoprint.events import Events
+from octoprint.util.commandline import CommandlineCaller, CommandlineError
 
 
 class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
@@ -35,6 +36,12 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 		except Exception as e:
 			if not os.path.isdir(self._settings.get(["copyFolder"])):
 				self._logger.info("Exception while trying to create/check for the copyFolder target: "+str(e))
+
+		# for file in os.listdir(self._basefolder):
+		# 	self._logger.info(file)
+		# for file in os.listdir(os.path.join(self._basefolder,"installation")):
+		# 	self._logger.info(file)
+		self._logger.info(os.path.join(self._basefolder,"installation"))
 
 	def on_api_get(self, request):
 		self._logger.info("usbfileman on_api_get triggered.  Request: "+str(request))
@@ -143,6 +150,92 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 				pip="https://github.com/MakerGear/OctoPrint-usbFileMan/archive/{target_version}.zip"
 			)
 		)
+
+	def get_api_commands(self):
+		# self._logger.info("USBFileMan get_api_commands triggered.")
+		#self._logger.info("M114 sent to printer.")
+		#self._printer.commands("M114");
+		#self.position_state = "stale"
+		return dict(adminAction=["action"])
+
+	def on_api_command(self, command, data):
+		self._logger.info("USBFileMan on_api_command triggered.  Command: "+str(command)+" .  Data: "+str(data))
+		if command == 'adminAction':
+			self._logger.info(data)
+			self.adminAction(data)
+		# elif command == 'writeNetconnectdPassword':
+		# 	#self.writeNetconnectdPassword(data)
+		# 	self._execute("/home/pi/.octoprint/scripts/changeNetconnectdPassword.sh "+data['password'])
+		# 	self._logger.info("Netconnectd password changed to "+data['password']+" !")
+
+	def adminAction(self, action, payload={}):
+		self._logger.info("adminAction called: "+ str(action))
+		caller = CommandlineCaller()
+		caller.on_log_call = self.log_call
+		caller.on_log_stdout = self.log_stdout
+		caller.on_log_stderr = self.log_stderr
+		if action["action"] == 'onlineInstall':
+			try:
+				# caller.checked_call(["some", "command", "with", "parameters"])
+				# caller.checked_call(["sudo apt-get install pmount"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick.rules")), "/etc/udev/rules.d/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick-handler@.service")), "/lib/systemd/system/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","cpmount")), "/usr/local/bin/cpmount"])
+				caller.checked_call(["sudo", "chmod", "u+x", "/usr/local/bin/cpmount"])
+			except CommandlineError as err:
+				self._logger.info(u"Command returned {}".format(err.returncode))
+			except Exception as e:
+				self._logger.info(u"Command failed with some other error {}.".format(str(e)))
+			else:
+				self._logger.info(u"Command finished successfully")
+
+
+
+		elif action["action"] == 'offlineInstall':
+			try:
+				# caller.checked_call(["some", "command", "with", "parameters"])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"installation/pmount_0.9.23-3_armhf.deb"))])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick.rules")), "/etc/udev/rules.d/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","usbstick-handler@.service")), "/lib/systemd/system/"])
+				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"installation","cpmount")), "/usr/local/bin/cpmount"])
+				caller.checked_call(["sudo", "chmod", "u+x", "/usr/local/bin/cpmount"])
+			except CommandlineError as err:
+				self._logger.info(u"Command returned {}".format(err.returncode))
+			else:
+				self._logger.info(u"Command finished successfully")
+
+
+
+	def log(self, prefix, msgType="stdout", *lines):
+		for line in lines:
+			self._logger.info(u"{} {}".format(prefix, line))
+			if msgType == "stderr":
+				self._plugin_manager.send_plugin_message("usbfileman", dict(commandError = line))
+			elif msgType == "stdout":
+				self._plugin_manager.send_plugin_message("usbfileman", dict(commandResponse = line))
+
+
+	def log_stdout(self, *lines):
+		self.log(u">>>", "stdout", *lines)
+
+	def log_stderr(self, *lines):
+		self.log(u"!!!", "stderr", *lines)
+
+	def log_call(self, *lines):
+		self.log(u"---", "stdout", *lines)
+
+
+
+	# try:
+	# 	caller.checked_call(["some", "command", "with", "parameters"])
+	# except CommandLineError as err:
+	# 	self._logger.info(u"Command returned {}".format(err.returncode))
+	# else:
+	# 	self._logger.info(u"Command finished successfully")
+
+
+
+
 
 
 # If you want your plugin to be registered within OctoPrint under a different name than what you defined in setup.py

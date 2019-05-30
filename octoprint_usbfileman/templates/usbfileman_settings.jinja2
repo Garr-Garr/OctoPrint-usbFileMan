@@ -1,0 +1,29 @@
+<div id="usbfileman_settings">
+
+Usbfileman Settings
+
+After installing USBFileMan, some configuration files and software need to be added.  Choose an option below to install these files.
+
+Online Installation - Select this if your printer is connected to the internet.  (with a message here with the internet connection detection results?)
+<br>
+<button class="btn btn-primary" data-bind="click: function() { $root.adminAction('onlineInstall')}">Online Install</button>
+
+<br><br>
+Offline Installation - Select this if your printer is not connected to the internet.  This will use the bundled version of pmount, but may fail if the system version is different or requires different packages than bundled.  Contact Support if you have issues with this option.
+<br>
+<button class="btn btn-primary" data-bind="click: function() { $root.adminAction('offlineInstall')}">Offline Install</button>
+
+
+
+{# <div id="command_response_popup" class="modal hide fade">
+	<center>Command Response:</center>
+	<br>
+	<center><textarea id="commandResponseText" data-bind="text: $root.commandResponse" style="width:90%;height:250px;"></textarea></center>
+	<br>
+	<div align="right"><button class="btn btn-primary" data-bind="click: function() { $root.showCommandResponse('hide') }">Close</button></div>
+
+</div> #}
+
+
+
+</div>
