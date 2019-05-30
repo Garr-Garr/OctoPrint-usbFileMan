@@ -177,7 +177,8 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 		if action["action"] == 'onlineInstall':
 			try:
 				# caller.checked_call(["some", "command", "with", "parameters"])
-				# caller.checked_call(["sudo apt-get install pmount"])
+				caller.checked_call(["sudo", "apt-get", "install", "pmount"])
+				caller.checked_call(["sudo", "apt-get", "install", "ntfs-3g"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick-handler@.service")), "/lib/systemd/system/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","cpmount")), "/usr/local/bin/cpmount"])
@@ -195,6 +196,12 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 			try:
 				# caller.checked_call(["some", "command", "with", "parameters"])
 				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","pmount_0.9.23-3_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libblkid1_2.25.2-6_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libc6_2.19-18+deb8u10_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libgcrypt20_1.6.3-2+deb8u5_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libgnutls-deb0-28_3.3.30-0+deb8u1_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libgpg-error0_1.17-3_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","ntfs-3g_1-2014.2.15AR.2-1+deb8u4_armhf.deb"))])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick-handler@.service")), "/lib/systemd/system/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","cpmount")), "/usr/local/bin/cpmount"])
