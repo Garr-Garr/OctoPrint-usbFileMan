@@ -182,7 +182,7 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick-handler@.service")), "/lib/systemd/system/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","cpmount")), "/usr/local/bin/cpmount"])
-				caller.checked_call(["sudo", "chmod", "u+x", "/usr/local/bin/cpmount"])
+				caller.checked_call(["sudo", "chmod", "+x", "/usr/local/bin/cpmount"])
 			except CommandlineError as err:
 				self._logger.info(u"Command returned {}".format(err.returncode))
 			except Exception as e:
@@ -201,11 +201,13 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libgcrypt20_1.6.3-2+deb8u5_armhf.deb"))])
 				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libgnutls-deb0-28_3.3.30-0+deb8u1_armhf.deb"))])
 				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libgpg-error0_1.17-3_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","libfuse2_2.9.3-15+deb8u3_armhf.deb"))])
+				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","fuse_2.9.3-15+deb8u3_armhf.deb"))])
 				caller.checked_call(["sudo", "dpkg", "-i", (os.path.join(self._basefolder,"static","installation","ntfs-3g_1-2014.2.15AR.2-1+deb8u4_armhf.deb"))])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick-handler@.service")), "/lib/systemd/system/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","cpmount")), "/usr/local/bin/cpmount"])
-				caller.checked_call(["sudo", "chmod", "u+x", "/usr/local/bin/cpmount"])
+				caller.checked_call(["sudo", "chmod", "+x", "/usr/local/bin/cpmount"])
 			except CommandlineError as err:
 				self._logger.info(u"Command returned {}".format(err.returncode))
 			else:
