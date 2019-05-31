@@ -1,28 +1,35 @@
 <div id="usbfileman_settings">
 
-Usbfileman Settings
+<center><h3>UsbFileMan Settings<h3></center>
+
+<hr/>
+<br>
 
 After installing USBFileMan, some configuration files and software need to be added.  Choose an option below to install these files.
+<br><br>
+Online Installation - Select this if your printer is connected to the internet.  <b>This installation method is strongly recommended.</b>
+<br><br>
+<center><button class="btn btn-primary" data-bind="click: function() { $root.commandResponse(''), $root.showCommandResponse(), $root.adminAction('onlineInstall')}">Install Online</button></center>
 
-Online Installation - Select this if your printer is connected to the internet.  (with a message here with the internet connection detection results?)
-<br>
-<button class="btn btn-primary" data-bind="click: function() { $root.adminAction('onlineInstall')}">Online Install</button>
+<br><br><br>
+Offline Installation - Select this if your printer is not connected to the internet.  This will use the bundled version of pmount, but may fail if the system version is different or requires different packages than bundled.  Contact Support if you have issues with this installation method, and Online Installation fails or is not an option.
+
 
 <br><br>
-Offline Installation - Select this if your printer is not connected to the internet.  This will use the bundled version of pmount, but may fail if the system version is different or requires different packages than bundled.  Contact Support if you have issues with this option.
-<br>
-<button class="btn btn-primary" data-bind="click: function() { $root.adminAction('offlineInstall')}">Offline Install</button>
+<center><button class="btn btn-primary" data-bind="click: function() { $root.commandResponse(''), $root.showCommandResponse(), $root.adminAction('offlineInstall')}">Install Offline</button></center>
+<br><br>
+<i>Offline Installation tested on: "OctoPrint 1.3.7.1 running on OctoPi 0.13.0", "OctoPrint 1.3.6 running on OctoPi 0.13.0"</i>
 
 
 
-{# <div id="command_response_popup" class="modal hide fade">
+<div id="usbfileman_command_response_popup" class="modal hide fade">
 	<center>Command Response:</center>
 	<br>
-	<center><textarea id="commandResponseText" data-bind="text: $root.commandResponse" style="width:90%;height:250px;"></textarea></center>
+	<center><textarea id="usbfileman_commandResponseText" data-bind="text: $root.commandResponse" style="width:90%;height:250px;"></textarea></center>
 	<br>
 	<div align="right"><button class="btn btn-primary" data-bind="click: function() { $root.showCommandResponse('hide') }">Close</button></div>
 
-</div> #}
+</div>
 
 
 

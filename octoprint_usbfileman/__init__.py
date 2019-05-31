@@ -177,18 +177,21 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 		if action["action"] == 'onlineInstall':
 			try:
 				# caller.checked_call(["some", "command", "with", "parameters"])
-				caller.checked_call(["sudo", "apt-get", "install", "pmount"])
-				caller.checked_call(["sudo", "apt-get", "install", "ntfs-3g"])
+				caller.checked_call(["sudo", "apt-get", "-fqy", "install"])
+				caller.checked_call(["sudo", "apt-get", "-qy", "install", "pmount", "ntfs-3g"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick-handler@.service")), "/lib/systemd/system/"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","cpmount")), "/usr/local/bin/cpmount"])
 				caller.checked_call(["sudo", "chmod", "+x", "/usr/local/bin/cpmount"])
 			except CommandlineError as err:
 				self._logger.info(u"Command returned {}".format(err.returncode))
+				self.log(u"", "stderr", u"Online Installation Failed!  Please make sure there's an internet connection, and try again; if there's further trouble, try the Offline Installation, or contact Support.")
 			except Exception as e:
 				self._logger.info(u"Command failed with some other error {}.".format(str(e)))
+				self.log(u"", "stderr", u"Online Installation Failed!  Please make sure there's an internet connection, and try again; if there's further trouble, try the Offline Installation, or contact Support.")
 			else:
 				self._logger.info(u"Command finished successfully")
+				self.log(u"", "stdout", u"Online Installation Complete.")
 
 
 
@@ -210,8 +213,12 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 				caller.checked_call(["sudo", "chmod", "+x", "/usr/local/bin/cpmount"])
 			except CommandlineError as err:
 				self._logger.info(u"Command returned {}".format(err.returncode))
+				self.log(u"", "stderr", u"Offline Installation Failed!  Please either try again, connect to the internet and try the Online Installation, or contact Support.")
+
 			else:
 				self._logger.info(u"Command finished successfully")
+				self.log(u"", "stdout", u"Offline Installation Complete.")
+
 
 
 
@@ -233,18 +240,10 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 	def log_call(self, *lines):
 		self.log(u"---", "stdout", *lines)
 
-
-
-	# try:
-	# 	caller.checked_call(["some", "command", "with", "parameters"])
-	# except CommandLineError as err:
-	# 	self._logger.info(u"Command returned {}".format(err.returncode))
-	# else:
-	# 	self._logger.info(u"Command finished successfully")
-
-
-
-
+	def get_template_configs(self):
+		return [
+			dict(type="settings", custom_bindings=True, name="UsbFileMan Settings")
+		]
 
 
 # If you want your plugin to be registered within OctoPrint under a different name than what you defined in setup.py
