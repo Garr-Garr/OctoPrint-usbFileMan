@@ -177,6 +177,7 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 		if action["action"] == 'onlineInstall':
 			try:
 				# caller.checked_call(["some", "command", "with", "parameters"])
+				caller.checked_call(["sudo", "apt-get", "update"])
 				caller.checked_call(["sudo", "apt-get", "-fqy", "install"])
 				caller.checked_call(["sudo", "apt-get", "-qy", "install", "pmount", "ntfs-3g"])
 				caller.checked_call(["sudo", "cp", (os.path.join(self._basefolder,"static","installation","usbstick.rules")), "/etc/udev/rules.d/"])
