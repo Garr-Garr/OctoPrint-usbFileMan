@@ -5,7 +5,7 @@ then
    then
       if mountpoint -q /media/usb3
       then
-         if mointpoint -1 /media/usb4
+         if mountpoint -1 /media/usb4
          then
              echo "No mountpoints available!"
              #You can add more if you need
