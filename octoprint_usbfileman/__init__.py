@@ -73,7 +73,7 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 					if (str(file_root).startswith("._")):
 						self._logger.info("File seems to be a Mac system file; skipping.  Filename : "+str(file_name))
 						continue
-					if (file_extension in self._settings.get(["copyFileTypes"])):
+					if (file_extension.lower() in self._settings.get(["copyFileTypes"])):
 						full_src_name = os.path.join(src, file_name)
 						full_dest_name = os.path.join(dest, file_name)
 						if not (os.path.isfile(full_dest_name)):
@@ -251,6 +251,7 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 # ("OctoPrint-PluginSkeleton"), you may define that here. Same goes for the other metadata derived from setup.py that
 # can be overwritten via __plugin_xyz__ control properties. See the documentation for that.
 __plugin_name__ = "Usbfileman Plugin"
+__plugin_pythoncompat__ = ">=2.7,<4"
 
 def __plugin_load__():
 	global __plugin_implementation__
