@@ -111,7 +111,10 @@ class UsbfilemanPlugin(octoprint.plugin.SettingsPlugin,
 
 
 	def get_settings_defaults(self):
-		return dict(watchFolders = ["/media/usb1/toprint", "/media/usb2/toprint", "/media/usb3/toprint", "/media/usb4/toprint"],
+		return dict(watchFolders = ["/media/usb1/toprint", "/media/usb2/toprint", "/media/usb3/toprint", "/media/usb4/toprint",
+							  		"/media/usb1/Toprint", "/media/usb2/Toprint", "/media/usb3/Toprint", "/media/usb4/Toprint",
+							  		"/media/usb1/toPrint", "/media/usb2/toPrint", "/media/usb3/toPrint", "/media/usb4/toPrint",
+									"/media/usb1/ToPrint", "/media/usb2/ToPrint", "/media/usb3/ToPrint", "/media/usb4/ToPrint"],
 			copyFolder = "/home/pi/.octoprint/uploads/USB",
 			fileAction = "rename",
 			copyFileTypes = [".gcode", ".gco", ".g", ".stl"],
